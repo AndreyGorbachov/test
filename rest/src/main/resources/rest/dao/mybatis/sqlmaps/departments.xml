@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="by.test.rest.dao.DepartmentsDao">
+
+	<resultMap type="departmentView" id="departmentView">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="salary" property="salary"/>
+	</resultMap>
+
+	<insert id="create" parameterType="department" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO
+			departments (name)
+		VALUES
+			(#{name})
+	</insert>
+
+	<select id="read" resultType="department" parameterType="Long">
+		SELECT *
+		FROM
+			departments
+		WHERE
+			id = #{id}
+	</select>
+
+	<update id="update" parameterType="department">
+		UPDATE
+			departments
+		SET
+			name = #{name}
+		WHERE
+			id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="Long">
+		DELETE FROM
+			departments
+		WHERE
+			id = #{id}
+	</delete>
+
+	<select id="findAll" resultType="department">
+		SELECT *
+		FROM
+			departments
+		ORDER BY
+			id
+	</select>
+
+	<select id="findAllView" resultMap="departmentView">
+		SELECT 
+			d.id,
+    		d.name,
+    		(SELECT AVG(salary) from employees WHERE department_id = d.id) as salary
+ 		FROM 
+ 			departments d
+		ORDER BY
+			d.id
+	</select>
+</mapper>
